@@ -1,193 +1,155 @@
-Welcome to your new TanStack Start app!
+# TS-Inventory
 
-# Getting Started
+A full-stack inventory management application built with TanStack Start, featuring product management, customer management, and transaction tracking.
 
-To run this application:
+## Architecture
+
+### Tech Stack
+- **Framework**: TanStack Start (React full-stack with SSR)
+- **Routing**: TanStack Router with file-based routing
+- **State Management**: Zustand with persist middleware
+- **Forms**: React Hook Form
+- **Styling**: Tailwind CSS v4
+- **Icons**: Lucide React
+- **Testing**: Vitest
+
+### Project Structure
+
+```
+src/
+├── components/           # Reusable UI components
+│   ├── ui/             # Base UI components (Card, Modal, Table)
+│   ├── Header.tsx      # Application header
+│   ├── Footer.tsx      # Application footer
+│   ├── Sidebar.tsx     # Admin dashboard sidebar
+│   └── LoginBox.tsx    # Login form component
+├── middleware/         # Route middleware
+│   └── auth.ts        # Authentication middleware
+├── modules/            # Domain layer (services & repositories)
+│   ├── customer/      # Customer management module
+│   ├── inventory/     # Product/inventory module
+│   └── transaction/   # Transaction history module
+├── routes/             # TanStack Router file-based routing
+├── stores/            # Zustand state stores
+├── router.tsx         # Router configuration
+└── styles.css         # Global Tailwind styles
+```
+
+### Routes
+
+| Path | Description |
+|------|-------------|
+| `/` | Home page with login |
+| `/admin` | Admin layout with sidebar |
+| `/admin/` | Dashboard with stats |
+| `/admin/inventory` | Product inventory management |
+| `/admin/customer` | Customer management |
+| `/admin/transaction` | Transaction history |
+
+### Authentication
+- Mock authentication with simulated API delay
+- Zustand store persists to localStorage
+- Auth middleware available in `src/middleware/auth.ts` (currently commented out)
+
+### Data Layer
+- All data is stored in-memory (mock data)
+- Services simulate API calls with artificial delays
+- Repository pattern implemented for inventory module
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node.js 22+
+- pnpm (enabled via corepack)
+
+### Installation
 
 ```bash
 pnpm install
+```
+
+---
+
+## Development
+
+Run the development server on port 3000:
+
+```bash
 pnpm dev
 ```
 
-# Building For Production
+The app will be available at `http://localhost:3000`
 
-To build this application for production:
+### Available Scripts
 
 ```bash
-pnpm build
+pnpm dev          # Start development server
+pnpm build        # Build for production
+pnpm start        # Start production server
+pnpm test         # Run all tests
+pnpm test -- <file>  # Run a specific test file
 ```
+
+---
+
+## Production (Docker)
+
+### Using Docker Compose
+
+Build and run the production container:
+
+```bash
+docker-compose up -d --build
+```
+
+The production app will be available at `http://localhost:3000`
+
+### Using Dockerfile Directly
+
+```bash
+# Build the image
+docker build -t ts-inventory .
+
+# Run the container
+docker run -p 3000:3000 ts-inventory
+```
+
+### Docker Configuration
+
+The Dockerfile uses a multi-stage build:
+1. **Builder stage**: Installs dependencies and builds the application
+2. **Production stage**: Runs the built output with a non-root user
+
+Environment variables:
+- `NODE_ENV=production` (set in docker-compose.yml)
+
+### Managing the Container
+
+```bash
+# View logs
+docker-compose logs -f
+
+# Stop the container
+docker-compose down
+
+# Rebuild after changes
+docker-compose up -d --build
+```
+
+---
 
 ## Testing
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+Run tests with Vitest:
 
 ```bash
 pnpm test
 ```
 
-## Styling
+Run a specific test file:
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-### Removing Tailwind CSS
-
-If you prefer not to use Tailwind CSS:
-
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Uninstall the packages: `pnpm add @tailwindcss/vite tailwindcss --dev`
-
-
-
-## Routing
-
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
+```bash
+pnpm test -- src/some-test.test.ts
 ```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
