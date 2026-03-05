@@ -1,0 +1,39 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Build outputs
+.output
+dist
+
+# Development files
+.git
+.gitignore
+.vscode
+.idea
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Tests
+coverage
+.vitest
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# TanStack files
+.tanstack
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Misc
+*.md
+!package.json
+!pnpm-lock.yaml
